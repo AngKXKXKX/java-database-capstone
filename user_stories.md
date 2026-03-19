@@ -1,6 +1,6 @@
 # User Story Template
 
-##### **Admin User Stories**
+## **Admin User Stories**
 
 ### **User Story 1**
 **Title:**
@@ -73,7 +73,7 @@ Handle cases where doctor has existing appointments
 **Notes:**
 Consider exporting results for reporting
 
-##### **Patients User Stories**
+## **Patients User Stories**
 
 ### **User Story 1**
 **Title:**
@@ -159,7 +159,7 @@ Handle time conflicts
 Consider adding reminder notifications as a future feature
 
 
-##### **Doctors User Stories**
+## **Doctors User Stories**
 
 ### **User Story 1**
 **Title:**
