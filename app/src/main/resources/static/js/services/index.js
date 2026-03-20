@@ -1,58 +1,82 @@
-/*
-  Import the openModal function to handle showing login popups/modals
-  Import the base API URL from the config file
-  Define constants for the admin and doctor login API endpoints using the base URL
+import { openModal } from './modal.js';
+import { BASE_URL } from './config.js';
 
-  Use the window.onload event to ensure DOM elements are available after page load
-  Inside this function:
-    - Select the "adminLogin" and "doctorLogin" buttons using getElementById
-    - If the admin login button exists:
-        - Add a click event listener that calls openModal('adminLogin') to show the admin login modal
-    - If the doctor login button exists:
-        - Add a click event listener that calls openModal('doctorLogin') to show the doctor login modal
+const ADMIN_API = `${BASE_URL}/admin/login`;
+const DOCTOR_API = `${BASE_URL}/doctor/login`;
 
+window.onload = function () {
+  const adminBtn = document.getElementById('adminLogin');
+  const doctorBtn = document.getElementById('doctorLogin');
 
-  Define a function named adminLoginHandler on the global window object
-  This function will be triggered when the admin submits their login credentials
+  if (adminBtn) {
+    adminBtn.addEventListener('click', () => openModal('adminLogin'));
+  }
 
-  Step 1: Get the entered username and password from the input fields
-  Step 2: Create an admin object with these credentials
+  if (doctorBtn) {
+    doctorBtn.addEventListener('click', () => openModal('doctorLogin'));
+  }
+};
 
-  Step 3: Use fetch() to send a POST request to the ADMIN_API endpoint
-    - Set method to POST
-    - Add headers with 'Content-Type: application/json'
-    - Convert the admin object to JSON and send in the body
+window.adminLoginHandler = async function () {
+  try {
+    const username = document.getElementById('adminUsername').value;
+    const password = document.getElementById('adminPassword').value;
 
-  Step 4: If the response is successful:
-    - Parse the JSON response to get the token
-    - Store the token in localStorage
-    - Call selectRole('admin') to proceed with admin-specific behavior
+    const admin = { username, password };
 
-  Step 5: If login fails or credentials are invalid:
-    - Show an alert with an error message
+    const response = await fetch(ADMIN_API, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(admin)
+    });
 
-  Step 6: Wrap everything in a try-catch to handle network or server errors
-    - Show a generic error message if something goes wrong
+    if (response.ok) {
+      const data = await response.json();
+      const token = data.token;
 
+      localStorage.setItem('token', token);
 
-  Define a function named doctorLoginHandler on the global window object
-  This function will be triggered when a doctor submits their login credentials
+      selectRole('admin');
+    } else {
+      alert('Invalid admin credentials');
+    }
 
-  Step 1: Get the entered email and password from the input fields
-  Step 2: Create a doctor object with these credentials
+  } catch (error) {
+    console.error(error);
+    alert('Something went wrong. Please try again.');
+  }
+};
 
-  Step 3: Use fetch() to send a POST request to the DOCTOR_API endpoint
-    - Include headers and request body similar to admin login
+window.doctorLoginHandler = async function () {
+  try {
+    const email = document.getElementById('doctorEmail').value;
+    const password = document.getElementById('doctorPassword').value;
 
-  Step 4: If login is successful:
-    - Parse the JSON response to get the token
-    - Store the token in localStorage
-    - Call selectRole('doctor') to proceed with doctor-specific behavior
+    const doctor = { email, password };
 
-  Step 5: If login fails:
-    - Show an alert for invalid credentials
+    const response = await fetch(DOCTOR_API, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(doctor)
+    });
 
-  Step 6: Wrap in a try-catch block to handle errors gracefully
-    - Log the error to the console
-    - Show a generic error message
-*/
+    if (response.ok) {
+      const data = await response.json();
+      const token = data.token;
+
+      localStorage.setItem('token', token);
+
+      selectRole('doctor');
+    } else {
+      alert('Invalid doctor credentials');
+    }
+
+  } catch (error) {
+    console.error(error);
+    alert('Something went wrong. Please try again.');
+  }
+};
