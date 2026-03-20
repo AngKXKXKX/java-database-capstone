@@ -1,27 +1,43 @@
-
 package com.project.back_end.controllers;
 
+import com.project.back_end.model.Admin;
+import com.project.back_end.services.Service;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
+
+@RestController
+@RequestMapping("${api.path}admin")  // Base path configurable via application properties
 public class AdminController {
 
-// 1. Set Up the Controller Class:
-//    - Annotate the class with `@RestController` to indicate that it's a REST controller, used to handle web requests and return JSON responses.
-//    - Use `@RequestMapping("${api.path}admin")` to define a base path for all endpoints in this controller.
-//    - This allows the use of an external property (`api.path`) for flexible configuration of endpoint paths.
+    private final Service service;
 
+    public AdminController(Service service) {
+        this.service = service;
+    }
 
-// 2. Autowire Service Dependency:
-//    - Use constructor injection to autowire the `Service` class.
-//    - The service handles core logic related to admin validation and token checking.
-//    - This promotes cleaner code and separation of concerns between the controller and business logic layer.
-
-
-// 3. Define the `adminLogin` Method:
-//    - Handles HTTP POST requests for admin login functionality.
-//    - Accepts an `Admin` object in the request body, which contains login credentials.
-//    - Delegates authentication logic to the `validateAdmin` method in the service layer.
-//    - Returns a `ResponseEntity` with a `Map` containing login status or messages.
-
-
-
+    /**
+     * Admin login endpoint
+     * POST /{api.path}admin/login
+     * 
+     * @param admin Admin object containing username and password from request body
+     * @return ResponseEntity<Map<String, Object>> with login status or JWT token
+     */
+    @PostMapping("/login")
+    public ResponseEntity<Map<String, Object>> adminLogin(@RequestBody Admin admin) {
+        try {
+            Map<String, Object> response = service.validateAdmin(admin);
+            // If validation returned an error message, set proper status
+            if (response.containsKey("error")) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+            }
+            return ResponseEntity.ok(response); // 200 OK with token and message
+        } catch (Exception e) {
+            // Generic error handling
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "An unexpected error occurred during login."));
+        }
+    }
 }
-
