@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 
@@ -24,21 +26,33 @@ public class DoctorController {
     }
 
     @GetMapping("/availability/{user}/{doctorId}/{date}/{token}")
-    public ResponseEntity<?> getDoctorAvailability(
+    public ResponseEntity<Map<String, Object>> getDoctorAvailability(
             @PathVariable String user,
             @PathVariable Long doctorId,
             @PathVariable String date,
             @PathVariable String token
     ) {
+        // Validate token first
         if (!service.validateToken(token, user)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(Map.of("error", "Invalid or expired token"));
         }
-
+    
+        // Convert date string to LocalDate
+        LocalDate localDate;
         try {
-            List<String> availability = doctorService.getDoctorAvailability(doctorId, date);
+            localDate = LocalDate.parse(date); 
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("error", "Invalid date format. Use yyyy-MM-dd"));
+        }
+    
+        try {
+            // Get availability from service
+            List<LocalTime> availability = doctorService.getDoctorAvailability(doctorId, localDate);
             return ResponseEntity.ok(Map.of("availability", availability));
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("error", "Failed to retrieve doctor availability"));
         }
@@ -85,11 +99,22 @@ public class DoctorController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<?> doctorLogin(@RequestBody Login login) {
+    public ResponseEntity<?> doctorLogin(@RequestBody Login login,
+                                         @RequestParam(required = false) String role) {
         try {
-            Map<String, Object> response = doctorService.validateDoctor(login);
+            Map<String, Object> response = doctorService.validateDoctor(
+                    login.getIdentifier(),
+                    login.getPassword(),
+                    role
+            );
+    
+            if (response.containsKey("error")) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+            }
+    
             return ResponseEntity.ok(response);
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("error", "Login failed"));
         }

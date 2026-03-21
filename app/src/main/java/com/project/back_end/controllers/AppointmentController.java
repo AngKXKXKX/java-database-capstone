@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -27,15 +28,16 @@ public class AppointmentController {
             @PathVariable String token,
             @PathVariable Long doctorId,
             @RequestParam(required = false) String patientName,
-            @RequestParam(required = false) String date
+            @RequestParam(required = false) LocalDateTime start,
+            @RequestParam(required = false) LocalDateTime end
+            
     ) {
         if (!service.validateToken(token, "doctor")) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(Map.of("error", "Invalid or expired token"));
         }
-
         try {
-            List<Map<String, Object>> appointments = appointmentService.getAppointments(doctorId, patientName, date);
+            List<Appointment> appointments = appointmentService.getAppointments(doctorId,start,end,patientName);
             return ResponseEntity.ok(appointments);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -72,15 +74,16 @@ public class AppointmentController {
     @PutMapping("/update/{token}")
     public ResponseEntity<?> updateAppointment(
             @PathVariable String token,
-            @RequestBody Appointment appointment
+            @PathVariable Long appointmentId,
+            @RequestBody Appointment updatedAppointment,
+            @RequestBody Long patientId
     ) {
         if (!service.validateToken(token, "patient")) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(Map.of("error", "Invalid or expired token"));
         }
-
         try {
-            String result = appointmentService.updateAppointment(appointment);
+            String result = appointmentService.updateAppointment(appointmentId,updatedAppointment,patientId);
             if ("success".equalsIgnoreCase(result)) {
                 return ResponseEntity.ok(Map.of("message", "Appointment updated successfully"));
             } else {
@@ -93,10 +96,11 @@ public class AppointmentController {
         }
     }
 
-    @DeleteMapping("/cancel/{token}/{appointmentId}")
+    @DeleteMapping("/cancel/{token}/{appointmentId}/{patientId}")
     public ResponseEntity<?> cancelAppointment(
             @PathVariable String token,
-            @PathVariable Long appointmentId
+            @PathVariable Long appointmentId,
+            @PathVariable Long patientId
     ) {
         if (!service.validateToken(token, "patient")) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -104,7 +108,7 @@ public class AppointmentController {
         }
 
         try {
-            boolean canceled = appointmentService.cancelAppointment(appointmentId);
+            boolean canceled = appointmentService.cancelAppointment(appointmentId,patientId);
             if (canceled) {
                 return ResponseEntity.ok(Map.of("message", "Appointment canceled successfully"));
             } else {

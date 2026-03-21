@@ -3,6 +3,7 @@ package com.project.back_end.services;
 import com.project.back_end.models.Admin;
 import com.project.back_end.models.Doctor;
 import com.project.back_end.models.Patient;
+import com.project.back_end.services.PatientService;
 import com.project.back_end.repo.AdminRepository;
 import com.project.back_end.repo.DoctorRepository;
 import com.project.back_end.repo.PatientRepository;
@@ -16,15 +17,18 @@ import java.util.List;
 public class SharedService {
 
     private final TokenService tokenService;
+    private final PatientService patientService;
     private final AdminRepository adminRepository;
     private final DoctorRepository doctorRepository;
     private final PatientRepository patientRepository;
 
     public SharedService(TokenService tokenService,
+                    PatientService patientService,
                    AdminRepository adminRepository,
                    DoctorRepository doctorRepository,
                    PatientRepository patientRepository) {
         this.tokenService = tokenService;
+        this.patientService = patientService;
         this.adminRepository = adminRepository;
         this.doctorRepository = doctorRepository;
         this.patientRepository = patientRepository;
@@ -76,8 +80,8 @@ public class SharedService {
         return doctor.getAvailableTimes().contains(requestedTime) ? 1 : 0;
     }
 
-    public boolean validatePatient(String email, String phone) {
-        Patient patient = patientRepository.findByEmailOrPhone(email, phone);
+    public boolean validatePatient(String email) {
+        Patient patient = patientRepository.findByEmail(email);
         return patient == null;
     }
 
@@ -98,16 +102,16 @@ public class SharedService {
         }
     }
 
-    public List<?> filterPatient(String token, String condition, String doctorName, PatientService patientService) {
-        String email = tokenService.extractEmail(token);
+    public List<?> filterPatient(String token, String condition, String doctorName,Long patientID) {
+        //String email = tokenService.extractEmail(token);
         if (condition != null && doctorName != null) {
-            return patientService.filterByDoctorAndCondition(email, doctorName, condition);
+            return patientService.filterByDoctorAndCondition(patientID, doctorName, condition);
         } else if (condition != null) {
-            return patientService.filterByCondition(email, condition);
+            return patientService.filterByCondition(patientID, condition);
         } else if (doctorName != null) {
-            return patientService.filterByDoctor(email, doctorName);
+            return patientService.filterByDoctor(patientID, doctorName);
         } else {
-            return patientService.getPatientAppointment(email);
+            return patientService.getPatientAppointment(patientID);
         }
     }
 

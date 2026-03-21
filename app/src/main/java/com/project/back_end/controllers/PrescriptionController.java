@@ -35,7 +35,7 @@ public class PrescriptionController {
         }
 
         try {
-            appointmentService.changeStatus(1, prescription.getAppointmentId());
+            appointmentService.changeStatus(prescription.getAppointmentId(),1);
 
             Map<String, Object> response = prescriptionService.savePrescription(prescription);
             return ResponseEntity.status(HttpStatus.CREATED).body(response);

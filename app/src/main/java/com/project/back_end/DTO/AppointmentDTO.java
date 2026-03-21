@@ -3,6 +3,7 @@ package com.project.back_end.DTO;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import com.project.back_end.models.Appointment;
 
 public class AppointmentDTO {
 
@@ -39,6 +40,21 @@ public class AppointmentDTO {
             this.appointmentTimeOnly = appointmentTime.toLocalTime();
             this.endTime = appointmentTime.plusHours(1); // Appointment duration = 1 hour
         }
+    }
+
+     public AppointmentDTO(Appointment appointment) {
+        this(
+            appointment.getId(),
+            appointment.getDoctor().getId(),
+            appointment.getDoctor().getName(),
+            appointment.getPatient().getId(),
+            appointment.getPatient().getName(),
+            appointment.getPatient().getEmail(),
+            appointment.getPatient().getPhone(),
+            appointment.getPatient().getAddress(),
+            appointment.getAppointmentTime(),
+            appointment.getStatus()
+        );
     }
 
     public Long getId() { return id; }

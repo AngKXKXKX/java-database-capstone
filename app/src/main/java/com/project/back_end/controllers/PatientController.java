@@ -32,7 +32,7 @@ public class PatientController {
         }
 
         try {
-            Map<String, Object> patientDetails = patientService.getPatientDetails(token);
+            Patient patientDetails = patientService.getPatientDetails(token);
             return ResponseEntity.ok(patientDetails);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -44,7 +44,7 @@ public class PatientController {
     @PostMapping("/create")
     public ResponseEntity<?> createPatient(@RequestBody Patient patient) {
         try {
-            boolean isValid = service.validatePatient(patient);
+            boolean isValid = service.validatePatient(patient.getEmail());
             if (!isValid) {
                 return ResponseEntity.status(HttpStatus.CONFLICT)
                         .body(Map.of("error", "Patient with this email or phone already exists"));
@@ -68,7 +68,7 @@ public class PatientController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Login login) {
         try {
-            Map<String, Object> response = service.validatePatientLogin(login);
+            ResponseEntity<String> response = service.validatePatientLogin(login.getIdentifier(),login.getPassword());
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -102,15 +102,15 @@ public class PatientController {
     public ResponseEntity<?> filterPatientAppointment(
             @RequestParam String token,
             @RequestParam String condition,   // e.g., "past" or "future"
-            @RequestParam(required = false) String name
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) Long patientID
     ) {
         if (!service.validateToken(token, "patient")) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(Map.of("error", "Invalid or expired token"));
         }
-
         try {
-            List<?> filteredAppointments = service.filterPatient(condition, name, token);
+            List<?> filteredAppointments = service.filterPatient(token, condition, name, patientID);
             return ResponseEntity.ok(Map.of("appointments", filteredAppointments));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

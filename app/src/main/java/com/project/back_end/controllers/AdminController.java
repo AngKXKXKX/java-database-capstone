@@ -26,18 +26,12 @@ public class AdminController {
      * @return ResponseEntity<Map<String, Object>> with login status or JWT token
      */
     @PostMapping("/login")
-    public ResponseEntity<Map<String, Object>> adminLogin(@RequestBody Admin admin) {
+    public ResponseEntity<String> adminLogin(@RequestBody Admin admin) {
         try {
-            Map<String, Object> response = service.validateAdmin(admin.getUsername(), admin.getPassword());
-            // If validation returned an error message, set proper status
-            if (response.containsKey("error")) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
-            }
-            return ResponseEntity.ok(response); // 200 OK with token and message
+            return service.validateAdmin(admin.getUsername(), admin.getPassword());
         } catch (Exception e) {
-            // Generic error handling
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "An unexpected error occurred during login."));
+                    .body("An unexpected error occurred during login.");
         }
     }
 }

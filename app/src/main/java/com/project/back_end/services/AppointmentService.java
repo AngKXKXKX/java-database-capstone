@@ -46,7 +46,7 @@ public class AppointmentService {
     public String updateAppointment(Long appointmentId, Appointment updatedAppointment, Long patientId) {
         Appointment existing = appointmentRepository.findById(appointmentId).orElse(null);
         if (existing == null) return "Appointment not found";
-        if (!existing.getPatientId().equals(patientId)) return "Unauthorized update";
+        if (!existing.getPatient().getId().equals(patientId)) return "Unauthorized update";
 
         boolean doctorAvailable = true; 
         if (!doctorAvailable) return "Doctor not available at requested time";
@@ -58,13 +58,12 @@ public class AppointmentService {
     }
 
     @Transactional
-    public String cancelAppointment(Long appointmentId, Long patientId) {
+    public boolean cancelAppointment(Long appointmentId,Long patientId) {
         Appointment existing = appointmentRepository.findById(appointmentId).orElse(null);
-        if (existing == null) return "Appointment not found";
-        if (!existing.getPatientId().equals(patientId)) return "Unauthorized cancellation";
+        if (existing == null) return false;
 
         appointmentRepository.delete(existing);
-        return "Appointment canceled successfully";
+        return true;
     }
 
     @Transactional(readOnly = true)

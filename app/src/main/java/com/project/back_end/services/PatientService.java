@@ -54,13 +54,17 @@ public class PatientService {
         }
 
         List<Appointment> appointments = appointmentRepository.findByPatient_IdAndStatusOrderByAppointmentTimeAsc(patientId, status);
-        return appointments.stream().map(AppointmentDTO::new).collect(Collectors.toList());
+        return appointments.stream()
+                .map(AppointmentDTO::new)
+                .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
     public List<AppointmentDTO> filterByDoctor(Long patientId, String doctorName) {
         List<Appointment> appointments = appointmentRepository.filterByDoctorNameAndPatientId(doctorName, patientId);
-        return appointments.stream().map(AppointmentDTO::new).collect(Collectors.toList());
+        return appointments.stream()
+                .map(AppointmentDTO::new)
+                .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
@@ -75,12 +79,14 @@ public class PatientService {
         }
 
         List<Appointment> appointments = appointmentRepository.filterByDoctorNameAndPatientIdAndStatus(doctorName, patientId, status);
-        return appointments.stream().map(AppointmentDTO::new).collect(Collectors.toList());
+        return appointments.stream()
+                .map(AppointmentDTO::new)
+                .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
     public Patient getPatientDetails(String token) {
-        String email = tokenService.getEmailFromToken(token);
+        String email = tokenService.extractEmail(token);
         return patientRepository.findByEmail(email);
     }
 }

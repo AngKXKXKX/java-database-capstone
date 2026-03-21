@@ -7,10 +7,13 @@ import com.project.back_end.repo.DoctorRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.stream.Collectors;
 
 @Service
@@ -39,11 +42,15 @@ public class DoctorService {
                 date.plusDays(1).atStartOfDay()
         );
 
-        List<LocalTime> availableTimes = new ArrayList<>(doctor.getAvailableTimes());
+        // Convert stored String times to LocalTime
+        List<LocalTime> availableTimes = doctor.getAvailableTimes().stream()
+                .map(LocalTime::parse)
+                .collect(Collectors.toList());
 
         for (Appointment a : appointments) {
             availableTimes.remove(a.getAppointmentTime().toLocalTime());
         }
+
         return availableTimes;
     }
 
@@ -90,12 +97,25 @@ public class DoctorService {
         }
     }
 
-    public String validateDoctor(String email, String password) {
+    public Map<String, Object> validateDoctor(String email, String password, String role) {
+        Map<String, Object> response = new HashMap<>();
         Doctor doctor = doctorRepository.findByEmail(email);
-        if (doctor == null || !doctor.getPassword().equals(password)) {
-            return "Invalid credentials";
+    
+        if (doctor == null) {
+            response.put("error", "Doctor not found");
+            return response;
         }
-        return tokenService.generateToken(email,role);
+    
+        if (!doctor.getPassword().equals(password)) {
+            response.put("error", "Invalid password");
+            return response;
+        }
+    
+        // Successful login, generate token
+        String token = tokenService.generateToken(email, role != null ? role : "doctor");
+        response.put("token", token);
+        response.put("message", "Login successful");
+        return response;
     }
 
     @Transactional(readOnly = true)
