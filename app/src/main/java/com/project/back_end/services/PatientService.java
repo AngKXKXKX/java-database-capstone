@@ -1,8 +1,8 @@
 package com.project.back_end.services;
 
 import com.project.back_end.DTO.AppointmentDTO;
-import com.project.back_end.model.Appointment;
-import com.project.back_end.model.Patient;
+import com.project.back_end.models.Appointment;
+import com.project.back_end.models.Patient;
 import com.project.back_end.repo.AppointmentRepository;
 import com.project.back_end.repo.PatientRepository;
 import org.springframework.stereotype.Service;
@@ -38,9 +38,8 @@ public class PatientService {
     }
 
     @Transactional(readOnly = true)
-    public List<AppointmentDTO> getPatientAppointments(Long patientId) {
-        List<Appointment> appointments = appointmentRepository.findByPatientId(patientId);
-        return appointments.stream().map(AppointmentDTO::new).collect(Collectors.toList());
+    public List<Appointment> getPatientAppointment(Long patientId) {
+        return appointmentRepository.findByPatientId(patientId);
     }
 
     @Transactional(readOnly = true)

@@ -100,4 +100,7 @@ public class Doctor {
     public void setAvailableTimes(List<String> availableTimes) {
         this.availableTimes = availableTimes;
     }
+    public boolean isAvailableDuring(String time) {
+        return true;
+    }
 }

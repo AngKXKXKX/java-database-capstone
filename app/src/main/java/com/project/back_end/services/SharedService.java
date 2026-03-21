@@ -1,8 +1,8 @@
 package com.project.back_end.services;
 
-import com.project.back_end.model.Admin;
-import com.project.back_end.model.Doctor;
-import com.project.back_end.model.Patient;
+import com.project.back_end.models.Admin;
+import com.project.back_end.models.Doctor;
+import com.project.back_end.models.Patient;
 import com.project.back_end.repo.AdminRepository;
 import com.project.back_end.repo.DoctorRepository;
 import com.project.back_end.repo.PatientRepository;
@@ -13,14 +13,14 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class Service {
+public class SharedService {
 
     private final TokenService tokenService;
     private final AdminRepository adminRepository;
     private final DoctorRepository doctorRepository;
     private final PatientRepository patientRepository;
 
-    public Service(TokenService tokenService,
+    public SharedService(TokenService tokenService,
                    AdminRepository adminRepository,
                    DoctorRepository doctorRepository,
                    PatientRepository patientRepository) {
@@ -99,7 +99,7 @@ public class Service {
     }
 
     public List<?> filterPatient(String token, String condition, String doctorName, PatientService patientService) {
-        String email = tokenService.getEmailFromToken(token);
+        String email = tokenService.extractEmail(token);
         if (condition != null && doctorName != null) {
             return patientService.filterByDoctorAndCondition(email, doctorName, condition);
         } else if (condition != null) {

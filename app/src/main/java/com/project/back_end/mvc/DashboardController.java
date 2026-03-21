@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.project.back_end.service.SharedService; // Replace with your actual service import
+import com.project.back_end.services.SharedService; 
 
 @Controller
 public class DashboardController {

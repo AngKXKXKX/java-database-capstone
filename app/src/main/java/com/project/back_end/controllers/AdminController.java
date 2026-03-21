@@ -1,7 +1,7 @@
 package com.project.back_end.controllers;
 
-import com.project.back_end.model.Admin;
-import com.project.back_end.services.Service;
+import com.project.back_end.models.Admin;
+import com.project.back_end.services.SharedService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,9 +12,9 @@ import java.util.Map;
 @RequestMapping("${api.path}admin")  // Base path configurable via application properties
 public class AdminController {
 
-    private final Service service;
+    private final SharedService service;
 
-    public AdminController(Service service) {
+    public AdminController(SharedService service) {
         this.service = service;
     }
 
@@ -28,7 +28,7 @@ public class AdminController {
     @PostMapping("/login")
     public ResponseEntity<Map<String, Object>> adminLogin(@RequestBody Admin admin) {
         try {
-            Map<String, Object> response = service.validateAdmin(admin);
+            Map<String, Object> response = service.validateAdmin(admin.getUsername(), admin.getPassword());
             // If validation returned an error message, set proper status
             if (response.containsKey("error")) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);

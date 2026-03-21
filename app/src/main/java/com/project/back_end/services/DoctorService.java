@@ -1,7 +1,7 @@
 package com.project.back_end.services;
 
-import com.project.back_end.model.Doctor;
-import com.project.back_end.model.Appointment;
+import com.project.back_end.models.Doctor;
+import com.project.back_end.models.Appointment;
 import com.project.back_end.repo.AppointmentRepository;
 import com.project.back_end.repo.DoctorRepository;
 import org.springframework.stereotype.Service;
@@ -95,7 +95,7 @@ public class DoctorService {
         if (doctor == null || !doctor.getPassword().equals(password)) {
             return "Invalid credentials";
         }
-        return tokenService.generateToken(email);
+        return tokenService.generateToken(email,role);
     }
 
     @Transactional(readOnly = true)
@@ -111,8 +111,8 @@ public class DoctorService {
 
     public List<Doctor> filterDoctorByTime(List<Doctor> doctors, String timePeriod) {
         return doctors.stream().filter(d -> d.getAvailableTimes().stream().anyMatch(t -> {
-            if ("AM".equalsIgnoreCase(timePeriod)) return t.getHour() < 12;
-            else if ("PM".equalsIgnoreCase(timePeriod)) return t.getHour() >= 12;
+            if ("AM".equalsIgnoreCase(timePeriod)) return  LocalTime.parse(t).getHour() < 12;
+            else if ("PM".equalsIgnoreCase(timePeriod)) return  LocalTime.parse(t).getHour() >= 12;
             return true;
         })).collect(Collectors.toList());
     }

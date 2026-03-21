@@ -1,8 +1,8 @@
 package com.project.back_end.controllers;
 
-import com.project.back_end.model.Prescription;
+import com.project.back_end.models.Prescription;
 import com.project.back_end.services.PrescriptionService;
-import com.project.back_end.services.Service;
+import com.project.back_end.services.SharedService;
 import com.project.back_end.services.AppointmentService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,11 +15,11 @@ import java.util.Map;
 public class PrescriptionController {
 
     private final PrescriptionService prescriptionService;
-    private final Service service;
+    private final SharedService service;
     private final AppointmentService appointmentService;
 
     public PrescriptionController(PrescriptionService prescriptionService,
-                                  Service service,
+                                  SharedService service,
                                   AppointmentService appointmentService) {
         this.prescriptionService = prescriptionService;
         this.service = service;

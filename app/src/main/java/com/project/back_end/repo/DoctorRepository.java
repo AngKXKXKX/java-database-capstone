@@ -1,6 +1,6 @@
 package com.project.back_end.repo;
 
-import com.project.back_end.model.Doctor;
+import com.project.back_end.models.Doctor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -15,6 +15,8 @@ public interface DoctorRepository extends JpaRepository<Doctor, Long> {
     @Query("SELECT d FROM Doctor d WHERE d.name LIKE %:name%")
     List<Doctor> findByNameLike(String name);
 
+    List<Doctor> findByNameContainingIgnoreCase(String name);
+   
     List<Doctor> findByNameContainingIgnoreCaseAndSpecialtyIgnoreCase(String name, String specialty);
 
     List<Doctor> findBySpecialtyIgnoreCase(String specialty);

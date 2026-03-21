@@ -1,15 +1,15 @@
 package com.project.back_end.DTO;
 
-public class LoginRequest {
+public class Login {
 
     private String identifier;
 
     private String password;
 
-    public LoginRequest() {
+    public Login() {
     }
 
-    public LoginRequest(String identifier, String password) {
+    public Login(String identifier, String password) {
         this.identifier = identifier;
         this.password = password;
     }
@@ -29,3 +29,4 @@ public class LoginRequest {
     public void setPassword(String password) {
         this.password = password;
     }
+}
