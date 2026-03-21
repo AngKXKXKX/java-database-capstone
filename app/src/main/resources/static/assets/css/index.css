@@ -28,7 +28,7 @@ h2{
     justify-content: center;
     align-items: center;
     text-align: center;
-    background-image: url('../assets/images/background.jpg'); /* adjust path if needed */
+    background-image: url('/assets/images/defineRole/index.png'); 
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;

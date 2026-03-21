@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@RequestMapping("${api.path}admin")  // Base path configurable via application properties
+@RequestMapping("/admin")  
 public class AdminController {
 
     private final SharedService service;

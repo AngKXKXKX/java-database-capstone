@@ -1,8 +1,8 @@
-import { openModal } from './modal.js';
-import { BASE_URL } from './config.js';
+import { openModal } from '/js/components/modals.js';
+import { API_BASE_URL } from '/js/config/config.js';
 
-const ADMIN_API = `${BASE_URL}/admin/login`;
-const DOCTOR_API = `${BASE_URL}/doctor/login`;
+const ADMIN_API = `${API_BASE_URL}/admin/login`;
+const DOCTOR_API = `${API_BASE_URL}/doctor/login`;
 
 window.onload = function () {
   const adminBtn = document.getElementById('adminLogin');
@@ -53,8 +53,9 @@ window.doctorLoginHandler = async function () {
   try {
     const email = document.getElementById('doctorEmail').value;
     const password = document.getElementById('doctorPassword').value;
+    const role = "doctor"
 
-    const doctor = { email, password };
+    const doctor = { email, password,role};
 
     const response = await fetch(DOCTOR_API, {
       method: 'POST',
