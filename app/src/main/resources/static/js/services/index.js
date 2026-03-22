@@ -33,12 +33,15 @@ window.adminLoginHandler = async function () {
     });
 
     if (response.ok) {
+        console.log("ok")
       const data = await response.json();
       const token = data.token;
 
       localStorage.setItem('token', token);
+      console.log("set token")
 
       selectRole('admin');
+
     } else {
       alert('Invalid admin credentials');
     }
@@ -55,7 +58,7 @@ window.doctorLoginHandler = async function () {
     const password = document.getElementById('doctorPassword').value;
     const role = "doctor"
 
-    const doctor = { email, password,role};
+    const doctor = { identifier:email, password,role};
 
     const response = await fetch(DOCTOR_API, {
       method: 'POST',
@@ -81,3 +84,21 @@ window.doctorLoginHandler = async function () {
     alert('Something went wrong. Please try again.');
   }
 };
+
+function selectRole(role) {
+  setRole(role);
+  const token = localStorage.getItem('token');
+  if (role === "admin") {
+    if (token) {
+      window.location.href = `/adminDashboard/${token}`;
+    }
+  } if (role === "patient") {
+    window.location.href = "/pages/patientDashboard.html";
+  } else if (role === "doctor") {
+    if (token) {
+      window.location.href = `/doctorDashboard/${token}`;
+    } else if (role === "loggedPatient") {
+      window.location.href = "loggedPatientDashboard.html";
+    }
+  }
+}

@@ -14,7 +14,6 @@ public class DashboardController {
     // 2. Autowire the shared service that handles token validation
     @Autowired
     private SharedService sharedService;
-
     // 3. Admin dashboard route
     @GetMapping("/adminDashboard/{token}")
     public ModelAndView adminDashboard(@PathVariable("token") String token) {

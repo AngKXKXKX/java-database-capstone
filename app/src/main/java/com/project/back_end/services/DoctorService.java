@@ -97,9 +97,10 @@ public class DoctorService {
         }
     }
 
-    public Map<String, Object> validateDoctor(String email, String password, String role) {
+    public Map<String, Object> validateDoctor(String email, String password) {
         Map<String, Object> response = new HashMap<>();
         Doctor doctor = doctorRepository.findByEmail(email);
+        String role="doctor";
     
         if (doctor == null) {
             response.put("error", "Doctor not found");

@@ -104,8 +104,7 @@ public class DoctorController {
         try {
             Map<String, Object> response = doctorService.validateDoctor(
                     login.getIdentifier(),
-                    login.getPassword(),
-                    role
+                    login.getPassword()
             );
     
             if (response.containsKey("error")) {

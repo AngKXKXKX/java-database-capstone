@@ -25,13 +25,13 @@ public class AdminController {
      * @param admin Admin object containing username and password from request body
      * @return ResponseEntity<Map<String, Object>> with login status or JWT token
      */
-    @PostMapping("/login")
-    public ResponseEntity<String> adminLogin(@RequestBody Admin admin) {
+   @PostMapping("/login")
+    public ResponseEntity<Map<String, Object>> adminLogin(@RequestBody Admin admin) {
         try {
             return service.validateAdmin(admin.getUsername(), admin.getPassword());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("An unexpected error occurred during login.");
+                    .body(Map.of("error", "An unexpected error occurred during login."));
         }
     }
 }

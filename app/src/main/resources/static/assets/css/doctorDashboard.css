@@ -59,13 +59,13 @@ tbody tr:hover {
     color: gray;
 }
 
-.today-btn {
+#todayButton {
     padding: 10px;
     background-color: #015c5d;
     margin-right: 10px;
 }
 
-.date-picker {
+#date-picker {
     margin-left: 10px;
     margin-top: 13px;
     padding: 10px;

@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class SharedService {
@@ -43,20 +44,32 @@ public class SharedService {
         }
     }
 
-    public ResponseEntity<String> validateAdmin(String username, String password) {
+    public ResponseEntity<Map<String, Object>> validateAdmin(String username, String password) {
         try {
             Admin admin = adminRepository.findByUsername(username);
+            String role = "admin";
+    
             if (admin == null) {
-                return new ResponseEntity<>("Admin not found", HttpStatus.UNAUTHORIZED);
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(Map.of("error", "Admin not found"));
             }
+    
             if (!admin.getPassword().equals(password)) {
-                return new ResponseEntity<>("Invalid password", HttpStatus.UNAUTHORIZED);
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(Map.of("error", "Invalid password"));
             }
-            String token = tokenService.generateToken(admin.getUsername(), "admin");
-            return new ResponseEntity<>(token, HttpStatus.OK);
+    
+            String token = tokenService.generateToken(username, role);
+    
+            return ResponseEntity.ok(Map.of(
+                    "token", token,
+                    "message", "Login successful"
+            ));
+    
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity<>("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Login failed"));
         }
     }
 
