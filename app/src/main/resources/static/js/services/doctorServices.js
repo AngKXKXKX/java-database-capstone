@@ -1,10 +1,10 @@
-import { BASE_URL } from '/js/config/config.js';
+import { API_BASE_URL } from '/js/config/config.js';
 
-const DOCTOR_API = `${BASE_URL}/doctors`;
+const DOCTOR_API = `${API_BASE_URL}doctor`;
 
 export async function getDoctors() {
   try {
-    const response = await fetch(DOCTOR_API, {
+    const response = await fetch(`${DOCTOR_API}/all`, {
       method: 'GET'
     });
 
@@ -20,7 +20,7 @@ export async function getDoctors() {
 
 export async function deleteDoctor(id, token) {
   try {
-    const response = await fetch(`${DOCTOR_API}/${id}/${token}`, {
+    const response = await fetch(`${DOCTOR_API}/delete/${id}/${token}`, {
       method: 'DELETE'
     });
 
@@ -43,7 +43,7 @@ export async function deleteDoctor(id, token) {
 
 export async function saveDoctor(doctor, token) {
   try {
-    const response = await fetch(`${DOCTOR_API}/${token}`, {
+    const response = await fetch(`${DOCTOR_API}/save/${token}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -70,12 +70,15 @@ export async function saveDoctor(doctor, token) {
 
 export async function filterDoctors(name, time, specialty) {
   try {
-    const response = await fetch(
-      `${DOCTOR_API}/filter/${name}/${time}/${specialty}`,
-      {
-        method: 'GET'
-      }
-    );
+    const url = new URL(`${DOCTOR_API}/filter`);
+
+    if (name) url.searchParams.append('name', name);
+    if (time) url.searchParams.append('time', time);
+    if (specialty) url.searchParams.append('speciality', specialty);
+
+    const response = await fetch(url, {
+      method: 'GET'
+    });
 
     if (response.ok) {
       const data = await response.json();

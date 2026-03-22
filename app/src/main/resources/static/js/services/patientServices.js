@@ -1,6 +1,6 @@
 // patientServices
-import { API_BASE_URL } from "../config/config.js";
-const PATIENT_API = API_BASE_URL + '/patient'
+import { API_BASE_URL } from "/js/config/config.js";
+const PATIENT_API = API_BASE_URL + 'patient'
 
 
 //For creating a patient in db

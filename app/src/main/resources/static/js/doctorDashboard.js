@@ -1,5 +1,5 @@
-import { getAllAppointments } from './appointmentService.js';
-import { createPatientRow } from './patientRow.js';
+import { getAllAppointments } from '/js/services/appointmentRecordService.js';
+import { createPatientRow } from '/js/components/patientRows.js';
 
 const tableBody = document.getElementById('tableBody');
 const searchInput = document.getElementById('searchInput');

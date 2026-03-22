@@ -1,5 +1,5 @@
 import { openModal } from '/js/components/modals.js';
-import { getDoctors, saveDoctor, filterDoctors } from '/js/services/doctorService.js';
+import { getDoctors, saveDoctor, filterDoctors } from '/js/services/doctorServices.js';
 import { createDoctorCard } from '/js/components/doctorCard.js';
 
 const contentDiv = document.getElementById('content');
