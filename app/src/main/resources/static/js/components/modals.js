@@ -37,7 +37,8 @@ export function openModal(type) {
         </div>
         <button class="dashboard-btn" id="saveDoctorBtn">Save</button>
       `;
-  } else if (type === 'patientLogin') {
+  } 
+  else if (type === 'patientLogin') {
     modalContent = `
         <h2>Patient Login</h2>
         <input type="text" id="patientEmail" placeholder="Email" class="input-field">
@@ -84,7 +85,7 @@ export function openModal(type) {
   }
 
   if (type === "patientLogin") {
-    document.getElementById("patientLoginBtn").addEventListener("click", loginPatient);
+    document.getElementById("patientLoginBtn").addEventListener("click", patientLoginHandler);
   }
 
   if (type === 'addDoctor') {

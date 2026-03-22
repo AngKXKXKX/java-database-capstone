@@ -1,9 +1,9 @@
 // doctorCard.js
 
 // Imports for booking and API functions (implement these separately)
-import { showBookingOverlay } from "./loggedPatient.js";
-import { deleteDoctor } from "./doctorServices.js";
-import { getPatientData } from "./patientServices.js";
+import { showBookingOverlay } from "/js/loggedPatient.js";
+import { deleteDoctor } from "/js/services/doctorServices.js";
+import { getPatientData } from "/js/services/patientServices.js";
 
 /**
  * Creates a doctor card element.

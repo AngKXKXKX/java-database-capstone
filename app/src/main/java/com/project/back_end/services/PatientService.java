@@ -5,11 +5,13 @@ import com.project.back_end.models.Appointment;
 import com.project.back_end.models.Patient;
 import com.project.back_end.repo.AppointmentRepository;
 import com.project.back_end.repo.PatientRepository;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,6 +36,35 @@ public class PatientService {
         } catch (Exception e) {
             e.printStackTrace();
             return 0;
+        }
+    }
+
+     public ResponseEntity<Map<String, Object>> validatePatientLogin(String email, String password) {
+        try {
+            Patient patient = patientRepository.findByEmail(email);
+            String role = "patient";
+    
+            if (patient == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(Map.of("error", "Patient not found"));
+            }
+    
+            if (!patient.getPassword().equals(password)) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(Map.of("error", "Invalid password"));
+            }
+    
+            String token = tokenService.generateToken(email, role);
+    
+            return ResponseEntity.ok(Map.of(
+                    "token", token,
+                    "message", "Login successful"
+            ));
+    
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Login failed"));
         }
     }
 

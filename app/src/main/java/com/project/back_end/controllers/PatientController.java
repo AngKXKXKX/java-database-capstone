@@ -66,17 +66,17 @@ public class PatientController {
 
    
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody Login login) {
+    public ResponseEntity<Map<String, Object>> login(@RequestBody Login login) {
         try {
-            ResponseEntity<String> response = service.validatePatientLogin(login.getIdentifier(),login.getPassword());
-            return ResponseEntity.ok(response);
+            return patientService.validatePatientLogin(
+                    login.getIdentifier(),
+                    login.getPassword()
+            );
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("error", "Login failed"));
         }
     }
-
-  
     @GetMapping("/appointments/{patientId}/{user}/{token}")
     public ResponseEntity<?> getPatientAppointment(
             @PathVariable Long patientId,
