@@ -62,12 +62,9 @@ async function loadAppointments() {
       }
   
       appointments.forEach((appointment) => {
-        const patient = {
-          id: appointment.patient?.id || '',          // fallback if patient object exists
-          name: appointment.patientName || 'N/A',
-          phone: appointment.patientPhone || 'N/A',
-          email: appointment.patientEmail || 'N/A'
-        };
+        const patient = appointment.patient
+        ? { id: appointment.patient.id, name: appointment.patient.name, phone: appointment.patient.phone, email: appointment.patient.email }
+        : { id: '', name: appointment.patientName || 'N/A', phone: appointment.patientPhone || 'N/A', email: appointment.patientEmail || 'N/A' };
   
         const row = createPatientRow(patient, appointment);
         tableBody.appendChild(row);
@@ -83,7 +80,7 @@ async function loadAppointments() {
       `;
     }
   }
-  
+
 window.addEventListener('DOMContentLoaded', () => {
   if (typeof renderContent === 'function') {
     renderContent();

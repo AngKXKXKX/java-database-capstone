@@ -18,6 +18,8 @@ export async function getAllAppointments(token, patientName, start, end) {
     throw new Error(`Failed to fetch appointments: ${errText}`);
   }
 
+  console.log(url);
+  console.log(response.json);
   return await response.json();
 }
 

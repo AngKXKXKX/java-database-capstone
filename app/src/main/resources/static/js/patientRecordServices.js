@@ -2,7 +2,7 @@
 import { getPatientAppointments } from "/js/services/patientServices.js";
 import { createPatientRecordRow } from '/js/components/patientRecordRow.js';
 
-const tableBody = document.getElementById("patientTableBody");
+const tableBody = document.getElementById("tableBody");
 const token = localStorage.getItem("token");
 
 const urlParams = new URLSearchParams(window.location.search);
@@ -31,7 +31,7 @@ async function initializePage() {
 function renderAppointments(appointments) {
   tableBody.innerHTML = "";
 
-  const actionTh = document.querySelector("#patientTable thead tr th:last-child");
+  const actionTh = document.querySelector("#patientTableBody thead tr th:last-child");
   if (actionTh) {
     actionTh.style.display = "table-cell"; // Always show "Actions" column
   }
