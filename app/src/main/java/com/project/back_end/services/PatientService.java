@@ -69,8 +69,12 @@ public class PatientService {
     }
 
     @Transactional(readOnly = true)
-    public List<Appointment> getPatientAppointment(Long patientId) {
-        return appointmentRepository.findByPatientId(patientId);
+    public List<Appointment> getPatientAppointment(Long doctorId) {
+        return appointmentRepository.findByPatientId(doctorId);
+    }
+     @Transactional(readOnly = true)
+    public List<Appointment> getAllPatientAppointment() {
+        return appointmentRepository.findAll();
     }
 
     @Transactional(readOnly = true)

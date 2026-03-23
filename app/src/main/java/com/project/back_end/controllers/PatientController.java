@@ -77,9 +77,8 @@ public class PatientController {
                     .body(Map.of("error", "Login failed"));
         }
     }
-    @GetMapping("/appointments/{patientId}/{user}/{token}")
-    public ResponseEntity<?> getPatientAppointment(
-            @PathVariable Long patientId,
+     @GetMapping("/appointments/{user}/{token}")
+    public ResponseEntity<?> getAllPatientAppointment(
             @PathVariable String user,
             @PathVariable String token
     ) {
@@ -89,7 +88,27 @@ public class PatientController {
         }
 
         try {
-            List<?> appointments = patientService.getPatientAppointment(patientId);
+            List<?> appointments = patientService.getAllPatientAppointment();
+            return ResponseEntity.ok(Map.of("appointments", appointments));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Failed to fetch appointments"));
+        }
+    }
+
+    @GetMapping("/appointments/{doctorId}/{user}/{token}")
+    public ResponseEntity<?> getPatientAppointment(
+            @PathVariable Long doctorId,
+            @PathVariable String user,
+            @PathVariable String token
+    ) {
+        if (!service.validateToken(token, user)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Invalid or expired token"));
+        }
+
+        try {
+            List<?> appointments = patientService.getPatientAppointment(doctorId);
             return ResponseEntity.ok(Map.of("appointments", appointments));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

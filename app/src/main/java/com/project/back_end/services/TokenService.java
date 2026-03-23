@@ -91,4 +91,13 @@ public class TokenService {
             return false;
         }
     }
+    public Doctor getDoctorFromToken(String token) {
+        try {
+            String email = extractEmail(token);
+            if (email == null) return null;
+            return doctorRepository.findByEmail(email);
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }

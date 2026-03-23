@@ -82,7 +82,9 @@ public class DoctorService {
 
     @Transactional(readOnly = true)
     public List<Doctor> getDoctors() {
-        return doctorRepository.findAll();
+        List<Doctor> doctors = doctorRepository.findAll();
+        System.out.println("DEBUG: doctor list from DB = " + doctors);
+        return doctors;
     }
 
     public int deleteDoctor(Long doctorId) {

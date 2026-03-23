@@ -1,6 +1,6 @@
 // patientRecordServices.js
-import { getPatientAppointments } from "./services/patientServices.js";
-import { createPatientRecordRow } from './components/patientRecordRow.js';
+import { getPatientAppointments } from "/js/services/patientServices.js";
+import { createPatientRecordRow } from '/js/components/patientRecordRow.js';
 
 const tableBody = document.getElementById("patientTableBody");
 const token = localStorage.getItem("token");
@@ -15,7 +15,7 @@ async function initializePage() {
   try {
     if (!token) throw new Error("No token found");
 
-    const appointmentData = await getPatientAppointments(patientId, token, "doctor") || [];
+    const appointmentData = await getPatientAppointments(token, "doctor");
 
     // Filter by both patientId and doctorId
     const filteredAppointments = appointmentData.filter(app =>

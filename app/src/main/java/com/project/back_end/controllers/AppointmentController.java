@@ -1,11 +1,14 @@
 package com.project.back_end.controllers;
 
 import com.project.back_end.models.Appointment;
+import com.project.back_end.models.Doctor;
 import com.project.back_end.services.AppointmentService;
 import com.project.back_end.services.SharedService;
+import com.project.back_end.services.TokenService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -17,34 +20,50 @@ public class AppointmentController {
 
     private final AppointmentService appointmentService;
     private final SharedService service;
+    private final TokenService tokenService;
 
-    public AppointmentController(AppointmentService appointmentService, SharedService service) {
+    public AppointmentController(AppointmentService appointmentService, SharedService service, TokenService tokenService) {
         this.appointmentService = appointmentService;
         this.service = service;
+        this.tokenService=tokenService;
     }
 
-    @GetMapping("/{token}/{doctorId}")
+    @GetMapping("/appointments/{token}")
     public ResponseEntity<?> getAppointments(
             @PathVariable String token,
-            @PathVariable Long doctorId,
             @RequestParam(required = false) String patientName,
-            @RequestParam(required = false) LocalDateTime start,
-            @RequestParam(required = false) LocalDateTime end
-            
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end
     ) {
         if (!service.validateToken(token, "doctor")) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(Map.of("error", "Invalid or expired token"));
         }
+    
+        Doctor doctor = tokenService.getDoctorFromToken(token);
+        if (doctor == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Doctor not found"));
+        }
+    
         try {
-            List<Appointment> appointments = appointmentService.getAppointments(doctorId,start,end,patientName);
-            return ResponseEntity.ok(appointments);
+            LocalDateTime rangeStart = (start != null) ? start : LocalDateTime.MIN;
+            LocalDateTime rangeEnd = (end != null) ? end : LocalDateTime.MAX;
+    
+            List<Appointment> appointments = appointmentService.getAppointments(
+                    doctor.getId(), rangeStart, rangeEnd, patientName
+            );
+    
+            return ResponseEntity.ok(Map.of(
+                    "count", appointments.size(),
+                    "appointments", appointments
+            ));
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Failed to fetch appointments"));
+                    .body(Map.of("error", "Failed to fetch appointments", "details", e.getMessage()));
         }
     }
-
  
     @PostMapping("/book/{token}")
     public ResponseEntity<?> bookAppointment(

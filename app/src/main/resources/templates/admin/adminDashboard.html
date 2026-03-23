@@ -69,10 +69,14 @@
     </div>
 
     <!-- Modal -->
-    <div id="modal" class="modal">
-        <span id="closeModal" class="close">&times;</span>
-        <div id="modal-body"></div>
-      </div>      
+    <div id="modal" class="modal hidden">
+        <div class="modal-content">
+            <span id="closeModal"class="close">&times;</span>
+            <div id="modal-body">
+                <!-- Dynamic content (login forms etc.) -->
+            </div>
+        </div>
+    </div>
 
     <!-- Page Logic -->
     <script type="module" src="/js/adminDashboard.js" defer></script>

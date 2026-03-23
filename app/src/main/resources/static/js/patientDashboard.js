@@ -28,19 +28,19 @@ document.addEventListener("DOMContentLoaded", () => {
 })
 
 function loadDoctorCards() {
-  getDoctors()
-    .then(doctors => {
-      const contentDiv = document.getElementById("content");
-      contentDiv.innerHTML = "";
-
-      doctors.forEach(doctor => {
-        const card = createDoctorCard(doctor);
-        contentDiv.appendChild(card);
-      });
-    })
-    .catch(error => {
-      console.error("Failed to load doctors:", error);
-    });
+    try {
+        const doctors =  getDoctors();
+        if (!doctors.length) {
+          console.log("No doctors available.");
+        }
+        doctors.forEach(doc => {
+            console.log(doc.specialty);
+            const card = createDoctorCard(doc);
+            contentDiv.appendChild(card);      
+        });
+    } catch (err) {
+        console.error("Failed to load doctors:", err);
+    }
 }
 // Filter Input
 document.getElementById("searchBar").addEventListener("input", filterDoctorsOnChange);

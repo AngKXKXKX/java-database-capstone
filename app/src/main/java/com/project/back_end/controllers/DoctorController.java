@@ -58,17 +58,21 @@ public class DoctorController {
         }
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<?> getDoctors() {
+   @GetMapping("/all")
+    public ResponseEntity<?> getAllDoctors() {
         try {
             List<Doctor> doctors = doctorService.getDoctors();
-            return ResponseEntity.ok(Map.of("doctors", doctors));
+            System.out.println("DEBUG: doctors fetched = " + doctors); // debug line
+            if (doctors == null || doctors.isEmpty()) {
+                return ResponseEntity.ok(List.of()); // return empty list if none
+            }
+            return ResponseEntity.ok(doctors);
         } catch (Exception e) {
+            e.printStackTrace(); // log the real exception
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("error", "Failed to fetch doctors"));
         }
     }
-
     @PostMapping("/save/{token}")
     public ResponseEntity<?> saveDoctor(
             @PathVariable String token,

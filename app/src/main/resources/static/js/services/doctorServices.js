@@ -3,20 +3,15 @@ import { API_BASE_URL } from '/js/config/config.js';
 const DOCTOR_API = `${API_BASE_URL}doctor`;
 
 export async function getDoctors() {
-  try {
-    const response = await fetch(`${DOCTOR_API}/all`, {
-      method: 'GET'
-    });
-
-    const data = await response.json();
-
-    return data.doctors || [];
-
-  } catch (error) {
-    console.error('Error fetching doctors:', error);
-    return [];
+    try {
+      const response = await fetch(`${DOCTOR_API}/all`);
+      if (!response.ok) throw new Error("Failed to fetch doctors");
+      return await response.json();
+    } catch (error) {
+      console.error("Error fetching doctors:", error);
+      return []; 
+    }
   }
-}
 
 export async function deleteDoctor(id, token) {
   try {
