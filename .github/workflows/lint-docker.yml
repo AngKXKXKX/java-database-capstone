@@ -1,15 +1,15 @@
-name: Lint Dockerfile
+name: Lint Dockerfiles
 
 on: [push, pull_request]
 
 jobs:
-  lint-docker:
+  dockerlint:
     runs-on: ubuntu-latest
-    name: Lint Dockerfile with Hadolint
+    name: Lint Dockerfiles
     steps:
       - uses: actions/checkout@v3
 
-      - name: Hadolint Dockerfile
-        uses: hadolint/hadolint-action@v1
+      - name: Run Hadolint
+        uses: hadolint/hadolint-action@v3.1.0
         with:
-          dockerfile: app/Dockerfile
+          dockerfile: ./app/Dockerfile
