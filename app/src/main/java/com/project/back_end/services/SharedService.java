@@ -73,7 +73,7 @@ public class SharedService {
         }
     }
 
-    public List<Doctor> filterDoctor(String name, String specialty, String timePeriod) {
+    public List<Doctor> filterDoctor(String name, String timePeriod, String specialty) {
         List<Doctor> doctors = doctorRepository.findAll(); // fallback
         if (name != null && !name.isEmpty()) {
             doctors = doctorRepository.findByNameContainingIgnoreCase(name);

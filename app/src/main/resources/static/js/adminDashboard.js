@@ -51,7 +51,6 @@ async function filterDoctorsOnChange() {
     let name = searchInput.value.trim();
     let time = timeFilter.value;
     let specialty = specialtyFilter.value;
-
     name = name === '' ? null : name;
     time = time === '' ? null : time;
     specialty = specialty === '' ? null : specialty;

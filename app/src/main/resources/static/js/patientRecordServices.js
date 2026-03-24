@@ -19,7 +19,7 @@ async function initializePage() {
 
     // Filter by both patientId and doctorId
     const filteredAppointments = appointmentData.filter(app =>
-      app.doctorId == doctorId);
+        app.doctorId == doctorId);
     console.log(filteredAppointments)
     renderAppointments(filteredAppointments);
   } catch (error) {

@@ -185,6 +185,7 @@ public class DoctorController {
     ) {
         try {
             List<Doctor> filteredDoctors = service.filterDoctor(name, time, speciality);
+            System.out.println(filteredDoctors);
             return ResponseEntity.ok(Map.of("doctors", filteredDoctors));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

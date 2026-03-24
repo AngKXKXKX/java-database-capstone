@@ -101,6 +101,6 @@ public class Doctor {
         this.availableTimes = availableTimes;
     }
     public boolean isAvailableDuring(String time) {
-        return true;
+        return availableTimes != null && availableTimes.contains(time);
     }
 }
